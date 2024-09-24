@@ -1,0 +1,48 @@
+<template>
+  <div class="multi-select-container">
+    <!-- input component -->
+    <div class="multi-select-box">
+      <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right input-box">
+        <label class="slds-form-element__label">
+          {label}
+          <template if:true={required}>
+            <abbr class="slds-required" title="required"> *</abbr>
+          </template>
+        </label>
+        <input type="text" class="slds-input search-input" onclick={handleInputClick} placeholder={placeholder}
+          name={name} onkeyup={handleInputKeyUp} />
+        <lightning-icon icon-name={iconName} alternative-text="open dropdown" size="xx-small"
+          class="dropdown-icon" onclick={toggleDropdown}>
+        </lightning-icon>
+      </div>
+    </div>
+    <!-- dropdown component -->
+    <div class="dropdown-container" onclick={handleDropdownClick} if:true={showDropdown}>
+      <ul class="dropdown-container__list" id="multiselect-dropdown">
+        <template for:each={options} for:item="option" for:index="index">
+          <li class="dropdown-container__list-item" key={option.value}
+            onclick={handleListClick} data-index={index} data-value={option.value}>
+            <div class="slds-form-element custom-class check-box-items">
+              <div class="slds-form-element__control">
+                <div class="slds-checkbox" aria-label={option.ariaLabel}>
+                  <input type="checkbox" aria-label={option.label} name="options" id={option.value}
+                    checked={option.checked} value={option.value} />
+                  <label class="slds-checkbox__label">
+                    <span class="slds-checkbox_faux"></span>
+                    <span class="slds-form-element__label checkbox-text">{option.label}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </li>
+        </template>
+      </ul>
+    </div>
+    <!-- pill components -->
+    <div class="pill-container">
+      <template for:each={values} for:item="value">
+        <lightning-pill label={value} key={value} data-value={value} onremove={handleCrossIconClick}></lightning-pill>
+      </template>
+    </div>
+  </div>
+</template>
