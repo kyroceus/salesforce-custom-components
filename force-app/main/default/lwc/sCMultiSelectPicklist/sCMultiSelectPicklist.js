@@ -12,6 +12,7 @@ export default class SCMultiSelectPicklist extends LightningElement {
   emptyOptions = [];
   showDropdown = false;
   clickedOnComponent = false;
+  focusedIndex = -1;
   
   // api properties
   @api get value() {
@@ -94,20 +95,35 @@ export default class SCMultiSelectPicklist extends LightningElement {
     );
   }
 
-  handleInputKeyUp(event) {
-    if (event.keyCode === 13) {
-      this.clickedOnComponent = false;
-      this.showDropdown = false;
+  handleInputKeyUp(event) {    
+    switch (event.keyCode) {
+      case 40: // Arrow down
+        this.focusNextItem();
+        break;
+      case 38: // Arrow up
+        this.focusPreviousItem();
+        break;
+      case 13: // Enter key
+        this.selectFocusedItem();
+        break;
+      case 27: // Esc key
+        this.showDropdown = false;
+        break;
+      default:
+        const searchTerm = event.target.value.toLowerCase();
+        // debounceTimeout - we didn't declare this property
+        // as it causes unnecessary rerendering
+        clearTimeout(this.debounceTimeout);
+        this.debounceTimeout = setTimeout(() => {
+          this.options = this.emptyOptions
+            .filter(option => option.value.toLowerCase().includes(searchTerm))
+            .map(option => ({
+              ...option,
+              ariaLabel: option.label + ' ' + option.checked,
+              checked: this.values.includes(option.value)
+            }));
+        }, 300);
     }
-    this.options = this.emptyOptions
-      .filter((option) =>
-        option.value.toLowerCase().includes(event.target.value.toLowerCase())
-      )
-      .map((option) => ({
-        ...option,
-        ariaLabel : option.label + ' ' + option.checked,
-        checked: this.values.includes(option.value)
-      }));
   }
 
   // helper methods
@@ -132,5 +148,38 @@ export default class SCMultiSelectPicklist extends LightningElement {
       checked: name === option.value ? !option.checked : option.checked,
       ariaLabel : option.label + ' ' + name === option.value ? !option.checked : option.checked
     }));
+  }
+
+  focusNextItem() {
+    if (this.options.length > 0) {
+      this.focusedIndex = (this.focusedIndex + 1) % this.options.length;
+      this.updateFocus();
+    }
+  }
+
+  focusPreviousItem() {
+    if (this.options.length > 0) {
+      this.focusedIndex =
+        this.focusedIndex === 0 ? this.options.length - 1 : this.focusedIndex - 1;
+      this.updateFocus();
+    }
+  }
+
+  updateFocus() {
+    this.template.querySelectorAll('.dropdown-container__list-item').forEach((item, index) => {
+      if (index === this.focusedIndex) {
+        item.classList.add('focused-item');
+        item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      } else {
+        item.classList.remove('focused-item');
+      }
+    });
+  }
+
+  selectFocusedItem() {
+    if (this.focusedIndex !== -1 && this.options.length > 0) {
+      const value = this.options[this.focusedIndex].value;
+      this.selectPicklistValue(value);
+    }
   }
 }

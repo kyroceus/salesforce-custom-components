@@ -10,6 +10,7 @@
           </template>
         </label>
         <input type="text" class="slds-input search-input" onclick={handleInputClick} placeholder={placeholder}
+          aria-expanded={showDropdown} aria-controls="multiselect-dropdown" aria-haspopup="listbox"
           name={name} onkeyup={handleInputKeyUp} />
         <lightning-icon icon-name={iconName} alternative-text="open dropdown" size="xx-small"
           class="dropdown-icon" onclick={toggleDropdown}>
