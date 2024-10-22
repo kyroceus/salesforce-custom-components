@@ -13,7 +13,7 @@
           aria-expanded={showDropdown} aria-controls="multiselect-dropdown" aria-haspopup="listbox"
           name={name} onkeyup={handleInputKeyUp} />
         <lightning-icon icon-name={iconName} alternative-text="open dropdown" size="xx-small"
-          class="dropdown-icon" onclick={toggleDropdown}>
+          class="dropdown-icon" onclick={handleDropdownIconClick}>
         </lightning-icon>
       </div>
     </div>
@@ -23,17 +23,13 @@
         <template for:each={options} for:item="option" for:index="index">
           <li class="dropdown-container__list-item" key={option.value}
             onclick={handleListClick} data-index={index} data-value={option.value}>
-            <div class="slds-form-element custom-class check-box-items">
-              <div class="slds-form-element__control">
-                <div class="slds-checkbox" aria-label={option.ariaLabel}>
-                  <input type="checkbox" aria-label={option.label} name="options" id={option.value}
-                    checked={option.checked} value={option.value} />
-                  <label class="slds-checkbox__label">
-                    <span class="slds-checkbox_faux"></span>
-                    <span class="slds-form-element__label checkbox-text">{option.label}</span>
-                  </label>
-                </div>
+            <div class="list-item_option" aria-label={option.label}>
+              <div class="icon-container">
+                <lightning-icon if:true={option.checked} icon-name="utility:check" alternative-text="checked" size="xx-small"></lightning-icon>
               </div>
+              <span class="slds-media__body">
+                <span class="slds-truncate">{option.label}</span>
+              </span>
             </div>
           </li>
         </template>

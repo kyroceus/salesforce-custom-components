@@ -1,4 +1,4 @@
-  .dropdown-icon {
+.dropdown-icon {
   position: absolute;
   right: 8px;
   bottom: 0;
@@ -42,19 +42,6 @@
   padding: 4px 12px;
 }
 
-.slds-form-element {
-  margin-bottom: 0;
-}
-
-.checkbox-text {
-  color: #5D5D5D !important;
-}
-
-.slds-checkbox_faux {
-  cursor: pointer;
-  border-radius: 4px;
-}
-
 .dropdown-container__list-item:hover,
 .dropdown-container__list-item:focus {
   background-color: #33333322;
@@ -63,4 +50,16 @@
 .focused-item {
   background-color: #f0f8ff;
   outline: none;
+}
+
+.icon-container {
+  height: 14px;
+  width: 14px;
+  display: inline-block;
+}
+
+.list-item_option {
+  display: flex;
+  gap: 4px;
+  cursor: pointer;
 }

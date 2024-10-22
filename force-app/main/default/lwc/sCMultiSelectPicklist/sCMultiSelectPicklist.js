@@ -79,6 +79,11 @@ export default class SCMultiSelectPicklist extends LightningElement {
     this.showDropdown = true;
   }
 
+  handleDropdownIconClick(event) {
+    this.clickedOnComponent = true;
+    this.showDropdown = !this.showDropdown;
+  }
+
   handleListClick(event) {
     this.selectPicklistValue(event.currentTarget.dataset.value);
     this.clickedOnComponent = true;
