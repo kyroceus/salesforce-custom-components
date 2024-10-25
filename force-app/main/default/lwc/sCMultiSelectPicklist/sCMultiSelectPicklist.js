@@ -7,7 +7,6 @@ const VALUE_CHANGE = 'valuechange';
 export default class SCMultiSelectPicklist extends LightningElement {
     
   // non decorated properties
-  picklistField = {};
   options = [];
   emptyOptions = [];
   showDropdown = false;

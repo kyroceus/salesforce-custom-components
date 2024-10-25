@@ -1,5 +1,6 @@
 import { LightningElement, api, wire } from 'lwc';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import COMMUNICATION_PREFERENCE_FIELD from '@salesforce/schema/Contact.Communication_Preference__c'
 
 export default class SCMainComponent extends LightningElement {
@@ -24,4 +25,31 @@ export default class SCMainComponent extends LightningElement {
   // lifecycle methods
 
   // event handlers
+  handlePicklistValueChange(event) {
+    this.communicationPreference = event.detail.value;  
+  }
+
+  saveCommunicationPreference(event) {
+    const fields = {};
+    fields[COMMUNICATION_PREFERENCE_FIELD.fieldApiName] = this.communicationPreference;
+    fields.Id = this.recordId;
+    const recordInput = {fields};
+    updateRecord(recordInput)
+      .then(() => {
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Save success",
+            message: "",
+            variant: "success",
+          })
+        );
+      })
+      .catch((err) => {
+        new ShowToastEvent({
+          title: "Unable to save communication preference",
+          message: err.body.message,
+          variant: "error",
+        })
+      })
+  }
 }
