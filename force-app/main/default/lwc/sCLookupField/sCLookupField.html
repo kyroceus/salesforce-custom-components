@@ -2,6 +2,12 @@
   <div class="lookup-container">
     <!-- input component -->
     <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right input-box">
+      <label class="slds-form-element__label">
+        {label}
+        <template if:true={required}>
+          <abbr class="slds-required" title="required"> *</abbr>
+        </template>
+      </label>
       <input class="slds-input" type="text" placeholder={placeholder} value={search}
         onkeyup={handleInputKeyUp} onclick={handleInputClick} />
       <!-- <svg if:false={selectedLabel} class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none"

@@ -8,7 +8,7 @@
 
 .search-icon {
   position: absolute;
-  top: 50%;
+  bottom: 0;
   transform: translateY(-50%);
   right: 5px;
 }
