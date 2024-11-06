@@ -7,9 +7,9 @@ public with sharing class SC_CustomComponents {
         if(customLookupProperty == null) {
             throw new AuraHandledException('Lookup Name is Incorrect (or) Lookup Name has not been added to the metadata');
         }
-        String query = String.format('SELECT Id, {0} FROM {1} WHERE {0} LIKE :searchLike AND {0} != NULL ', new List<String>{customLookupProperty.Field__c, customLookupProperty.Object__c, searchLike });
-        if(String.isNotBlank(customLookupProperty.Condition__c)) {
-            query += 'AND (' + customLookupProperty.Condition__c + ') ';
+        String query = String.format('SELECT Id, {0} FROM {1} WHERE {0} LIKE :searchLike AND {0} != NULL ', new List<String>{customLookupProperty.SC_Field__c, customLookupProperty.SC_Object__c, searchLike });
+        if(String.isNotBlank(customLookupProperty.SC_Condition__c)) {
+            query += 'AND (' + customLookupProperty.SC_Condition__c + ') ';
         }
         query += 'LIMIT 10';
         List<sObject> recordList = new List<sObject>();
@@ -22,7 +22,8 @@ public with sharing class SC_CustomComponents {
         for(sObject record: recordList) {
             LookupRecordWrapper lookupRecord = new LookupRecordWrapper();
             lookupRecord.value = (String)record.get('Id');
-            lookupRecord.label = getLabel(record, customLookupProperty.Field__c);
+            // label method will be discussed later, for now it is a placeholder
+            lookupRecord.label = getLabel(record, customLookupProperty.SC_Field__c);
             lookupRecordList.add(lookupRecord);
         }
         return lookupRecordList;

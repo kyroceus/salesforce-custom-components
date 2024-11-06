@@ -10,18 +10,10 @@
       </label>
       <input class="slds-input" type="text" placeholder={placeholder} value={search}
         onkeyup={handleInputKeyUp} onclick={handleInputClick} />
-      <!-- <svg if:false={selectedLabel} class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
-        width="24" height="24">
-        <use href={magnifierIcon}></use>
-      </svg> -->
       <lightning-icon icon-name="utility:search" class="search-icon" alternative-text="open dropdown" size="xx-small"
         onclick={handleCrossIconClick}></lightning-icon>
       <div class="lookup-filled" if:true={selectedLabel}>
         {selectedLabel}
-        <!-- <svg class="cross-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
-          width="24" height="24" onclick={handleSelectedRecordClick}>
-          <use href={blueCross}></use>
-        </svg> -->
         <lightning-icon icon-name="utility:close" alternative-text="open dropdown" size="xx-small"
           class="dropdown-icon" onclick={handleCrossIconClick}></lightning-icon>
       </div>
