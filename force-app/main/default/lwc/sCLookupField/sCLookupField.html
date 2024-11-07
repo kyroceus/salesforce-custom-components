@@ -9,7 +9,8 @@
         </template>
       </label>
       <input class="slds-input" type="text" placeholder={placeholder} value={search}
-        onkeyup={handleInputKeyUp} onclick={handleInputClick} />
+        aria-expanded={showDropdown} aria-controls="lookup-dropdown" aria-haspopup="listbox"
+        onkeyup={handleInputKeyUp} onclick={handleInputClick} onfocus={handleInputFocus}/>
       <lightning-icon icon-name="utility:search" class="search-icon" alternative-text="open dropdown" size="xx-small"
         onclick={handleCrossIconClick}></lightning-icon>
       <div class="lookup-filled" if:true={selectedLabel}>
@@ -19,17 +20,18 @@
       </div>
     </div>
     <!-- dropdown component -->
-    <div class="dropdown-container" onclick={handleDropdownClick} if:true={showDropdown}>
+    <div class="dropdown-container"  id="lookup-dropdown" onclick={handleDropdownClick} if:true={showDropdown}>
       <div class="lookup-spinner" if:true={loading}>
           <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
       </div>
       <ul class="dropdown-container__list" if:false={loading}>
-          <template for:each={lookupResults} for:item="lookup">
+          <template for:each={lookupResults} for:item="lookup" for:index="index">
               <li class="dropdown-container__list-item" 
                 key={lookup.value}
                 onclick={handleListClick}
                 data-value={lookup.value} 
                 data-label={lookup.label}
+                data-index={index}
               >
                   {lookup.label}
               </li>    

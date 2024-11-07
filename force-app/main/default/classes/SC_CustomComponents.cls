@@ -9,7 +9,15 @@ public with sharing class SC_CustomComponents {
         }
         String query = String.format('SELECT Id, {0} FROM {1} WHERE {0} LIKE :searchLike AND {0} != NULL ', new List<String>{customLookupProperty.SC_Field__c, customLookupProperty.SC_Object__c, searchLike });
         if(String.isNotBlank(customLookupProperty.SC_Condition__c)) {
-            query += 'AND (' + customLookupProperty.SC_Condition__c + ') ';
+            String condition = customLookupProperty.SC_Condition__c;
+            if(String.isNotBlank(filterValues)) {
+                List<String> filterValueList = new List<String>();
+                for(String filterValue: filterValues.split(',')) {
+                    filterValueList.add(filterValue.trim());
+                }
+                condition = String.format(customLookupProperty.SC_Condition__c, filterValueList);
+            }
+            query += 'AND (' + condition + ') ';
         }
         query += 'LIMIT 10';
         List<sObject> recordList = new List<sObject>();

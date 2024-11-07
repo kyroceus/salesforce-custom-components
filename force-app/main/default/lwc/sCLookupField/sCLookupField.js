@@ -14,6 +14,7 @@ export default class SCLookupField extends LightningElement {
   lookupResults = [];
   clickedOnComponent = false;
   showDropdown = false;
+  focusedIndex = -1;
 
   // api properties
   @api name;
@@ -44,42 +45,59 @@ export default class SCLookupField extends LightningElement {
 
   // event handlers
   handleDocumentClick(event) {
-    if (this.clickedOnComponent) this.clickedOnComponent = false;
-    else this.showDropdown = false;
+    if (this.clickedOnComponent) {
+      this.clickedOnComponent = false;
+    } 
+    else { 
+      this.showDropdown = false;
+      this.focusedIndex = -1;
+    }
   }
 
-  handleInputClick(event) {
+  handleInputClick() {
+    if(!this.showDropdown) {
+      this.fetchLookupRecordsImperative();
+    }
     this.clickedOnComponent = true;
     this.showDropdown = true;
-    this.loading = true;
-    this.fetchLookupRecordsImperative();
+  }
+
+  handleInputFocus() {
+    if(!this.showDropdown) {
+      this.fetchLookupRecordsImperative();
+    }
+    this.showDropdown = true;
   }
 
   handleListClick(event) {
-    this.dispatchEvent(new CustomEvent(CHANGE_EVENT, {
-      detail: {
-        name: this.name,
-        value: event.currentTarget.dataset.value
-      }
-    }));
-    this.selectedLabel = event.currentTarget.dataset.label;
-    this.search = '';
+    this.selectLookupRecord(event.currentTarget.dataset.label, event.currentTarget.dataset.value);
   }
 
   handleInputKeyUp(event) {
-    this.search = event.target.value;
-    this.fetchLookupRecordsImperative();
+    switch (event.keyCode) {
+      case 40: // Arrow down
+        this.focusNextItem();
+        break;
+      case 38: // Arrow up
+        this.focusPreviousItem();
+        break;
+      case 13: // Enter key
+        this.selectFocusedItem();
+        break;
+      case 27: // Esc key
+        this.showDropdown = false;
+        this.focusedIndex = -1;
+        break;
+      default:
+        if(this.search !== event.target.value) {
+          this.search = event.target.value;
+          this.fetchLookupRecordsImperative();
+        }
+    }
   }
 
   handleCrossIconClick() {
-    this.selectedLabel = '';
-    this.search = '';
-    this.dispatchEvent(CHANGE_EVENT, {
-      detail: {
-        value: '',
-        name: this.name
-      }
-    })
+    this.selectLookupRecord('', '');
   }
 
   // helper methods
@@ -99,5 +117,52 @@ export default class SCLookupField extends LightningElement {
         this.loading = false;
       })
     }, 500);
+  }
+
+  focusNextItem() {
+    if (this.lookupResults.length > 0) {
+      this.focusedIndex = (this.focusedIndex + 1) % this.lookupResults.length;
+      this.updateFocus();
+    }
+  }
+
+  focusPreviousItem() {
+    if (this.lookupResults.length > 0) {
+      this.focusedIndex =
+        this.focusedIndex === 0 ? this.lookupResults.length - 1 : this.focusedIndex - 1;
+      this.updateFocus();
+    }
+  }
+
+  updateFocus() {
+    this.template.querySelectorAll('.dropdown-container__list-item').forEach((item, index) => {
+      if (index === this.focusedIndex) {
+        item.classList.add('focused-item');
+        item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      } else {
+        item.classList.remove('focused-item');
+      }
+    });
+  }
+
+  selectFocusedItem() {
+    if (this.focusedIndex !== -1 && this.lookupResults.length > 0) {
+      const {value, label} = this.lookupResults[this.focusedIndex];
+      this.selectLookupRecord(label, value);
+    }
+  }
+
+  selectLookupRecord(label, value) {
+    this.template.querySelector('.slds-input').blur();
+    this.dispatchEvent(new CustomEvent(CHANGE_EVENT, {
+      detail: {
+        name: this.name,
+        value: value
+      }
+    }));
+    this.selectedLabel = label;
+    this.search = '';
+    this.showDropdown = false;
+    this.focusedIndex = -1;
   }
 }
