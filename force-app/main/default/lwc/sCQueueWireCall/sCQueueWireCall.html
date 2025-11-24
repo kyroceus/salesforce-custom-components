@@ -1,0 +1,22 @@
+<template>
+  <lightning-card>
+
+    <lightning-combobox
+      name="parentPicklist"
+      label="Parent Picklist"
+      value={parentPicklistValue}
+      placeholder="Select Value"
+      options={parentPicklistOptions}
+      onchange={handleParentChange}
+    ></lightning-combobox>
+    <lightning-combobox
+      name="childPicklist"
+      label="Child Picklist"
+      value={childPicklistValue}
+      placeholder="Select Value"
+      options={childPicklistOptions}
+      onchange={handleChildChange}
+    ></lightning-combobox>
+  </lightning-card>
+</template>
+

@@ -22,12 +22,13 @@
     <h1 slot="title">Update Account</h1>
     <div class="slds-m-horizontal_small">
       <c-s-c-lookup-field
-        name="account"
-        label="Primary Address"
-        value-id={accountId}
-        value-name={accountName}
-        filter-values="0012w00001Lb75pAAB  "
+        name="contact"
+        label="Primary Contact"
+        value-id={contactId}
+        value-label={contactName}
+        filter-values={recordId}
         lookup-name="Primary_Contact_Lookup"
+        onchange={handleChange}
       ></c-s-c-lookup-field>
     </div>
   </lightning-card>
